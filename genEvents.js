@@ -1,6 +1,7 @@
 var ltx = require('ltx');
 var argv = process.argv;
 var fs = require('fs');
+var fix = require('./fix');
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
@@ -27,7 +28,7 @@ function genEvent(body) {
 		var title = {};
 		tokens.forEach(function(token) {
 			if(token.getChildText("NER") == "DATE") {
-				date = token.getChildText("NormalizedNER");
+				date = fix.date(token.getChildText("NormalizedNER"));
 			}
 			if(token.getChildText("NER") == "TIME") {
 				time = token.getChildText("NormalizedNER");
@@ -54,8 +55,8 @@ function genEvent(body) {
 				title[dep.getChildText("dependent")] = 1;
 			}
 		});
-		console.log("Date is: " + date);
-		console.log("Time is: " + time);
+		console.log("DATE " + JSON.stringify(date));
+		console.log("Time" + time);
 		console.log("Location is: " + locale);
 		for(key in title) {
 			console.log("Key words are: " + key);
