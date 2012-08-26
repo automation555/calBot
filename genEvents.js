@@ -18,6 +18,21 @@ fs.readFile(argv[2], 'ascii', function(err, data) {
 	genEvent(body);
 });
 
+function hashSettoString(a) {
+	var p = "";
+	for(var key in a) {
+		p = p + " " + key;
+	}
+	return p;
+}
+
+function generateJSON(date, time, locale, key) {
+	if(date.time == undefined)
+		date.time = time;
+	var obj = {'summary': hashSettoString(key), 'location': locale, 'start': { 'dateTime': (date.year).toString() + "-" + (date.month).toString() + "-" + (date.day).toString() + date.time + "+5:30"}, 'end': {'dateTime': (date.year).toString() + "-" + (date.month).toString() + "-" + (date.day).toString() + date.time + "+6:30"}, 'description': hashSettoString(key)};
+	console.log(JSON.stringify(obj));
+}
+
 function genEvent(body) {
 	body = body.getChild("document").getChild("sentences");
 	var sentences = body.getChildren("sentence");
@@ -55,11 +70,14 @@ function genEvent(body) {
 				title[dep.getChildText("dependent")] = 1;
 			}
 		});
-		console.log("DATE " + JSON.stringify(date));
-		console.log("Time" + time);
-		console.log("Location is: " + locale);
-		for(key in title) {
-			console.log("Key words are: " + key);
-		}
+		if(time == undefined)
+			time = "09:00";
+		generateJSON(date, time, locale, title);
+		//console.log("DATE " + JSON.stringify(date));
+		//console.log("Time" + time);
+		//console.log("Location is: " + locale);
+		//for(key in title) {
+		//	console.log("Key words are: " + key);
+		//}
 	});
 }

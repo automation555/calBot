@@ -6,7 +6,7 @@ var date = function (s) {
 	var day = 6;
 	var prevOff = false;
 	tokens.forEach(function(token) {
-		console.log("Token is: " + token);
+		//console.log("Token is: " + token);
 		if(token == "OFFSET") {
 			prevOff = true;
 		}
@@ -38,7 +38,8 @@ var date = function (s) {
 		}
 		else {
 			var weekReg = /^[X]{4}[-][W,X]{3}[-]\d/;
-			var yearReg = /^[X]{4}-\d{1,2}/
+			var yearReg = /^[X]{4}-\d{1,2}/;
+			var timeReg = /^[T]\d{2}[:]\d{2}/;
 			if(weekReg.test(token)) {
 				var toDay = parseInt(token.match(/\d+/));
 				toDay -= 1;
@@ -61,6 +62,9 @@ var date = function (s) {
 				if(token.contains("T")) {
 					date.time = token.match(/[T]\d{2}[:]\d{2}/);
 				}
+			}
+			if(timeReg.test(token)) {
+				date.time = token.match(/[T]\d{2}[:]\d{2}/);
 			}
 		}
 		var dateObj = new Date(date.year, date.month, date.day);
